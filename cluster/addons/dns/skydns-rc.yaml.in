@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: etcd
-        image: gcr.io/google_containers/etcd:2.0.9
+        image: runningwild/k8s-fix-etcd
         resources:
           limits:
             cpu: 100m

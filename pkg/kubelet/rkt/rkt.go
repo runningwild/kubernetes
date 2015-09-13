@@ -1111,8 +1111,22 @@ func (r *Runtime) PullImage(image kubecontainer.ImageSpec, pullSecrets []api.Sec
 		return err
 	}
 
-	if _, err := r.runCommand("fetch", dockerPrefix+img); err != nil {
-		glog.Errorf("Failed to fetch: %v", err)
+	// TODO(jwills): There isn't any way right now to indicate that an image is
+	// a rkt image or a docker image that should be run in rkt.  So for now
+	// we'll try both and only return a failure if both fail.
+	errs := make(chan error)
+	imgNames := []string{img, dockerPrefix + img}
+	for _, img := range imgNames {
+		go func(img string) {
+			_, err := r.runCommand("fetch", img)
+			errs <- err
+		}(img)
+	}
+	err1 := <-errs
+	err2 := <-errs
+	if err1 != nil && err2 != nil {
+		err := fmt.Errorf("Unable to fetch either of %v: err1[%v] err2[%v]", imgNames, err1, err2)
+		glog.Errorf("%v", err)
 		return err
 	}
 	return nil

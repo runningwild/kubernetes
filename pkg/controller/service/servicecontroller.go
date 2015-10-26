@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"net"
 	"sort"
+	"strings"
 	"sync"
 	"time"
 
@@ -581,9 +582,12 @@ func stringSlicesEqual(x, y []string) bool {
 }
 
 func hostsFromNodeList(list *api.NodeList) []string {
-	result := make([]string, len(list.Items))
-	for ix := range list.Items {
-		result[ix] = list.Items[ix].Name
+	var result []string
+	for _, item := range list.Items {
+		if strings.Contains(item.Name, "kubernetes-master") {
+			continue
+		}
+		result = append(result, item.Name)
 	}
 	return result
 }

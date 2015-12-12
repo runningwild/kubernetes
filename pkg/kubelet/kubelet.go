@@ -2646,30 +2646,31 @@ func (kl *Kubelet) recordNodeStatusEvent(eventtype, event string) {
 }
 
 func (kl *Kubelet) syncNetworkStatus() {
-	var err error
-	if kl.configureCBR0 {
-		if kl.flannelExperimentalOverlay {
-			podCIDR, err := kl.flannelHelper.Handshake()
-			if err != nil {
-				glog.Infof("Flannel server handshake failed %v", err)
-				return
+	err := func() error {
+		if kl.configureCBR0 {
+			if kl.flannelExperimentalOverlay {
+				podCIDR, err := kl.flannelHelper.Handshake()
+				if err != nil {
+					return fmt.Errorf("Flannel server handshake failed %v", err)
+				}
+				glog.Infof("Setting cidr: %v -> %v",
+					kl.runtimeState.podCIDR(), podCIDR)
+				kl.runtimeState.setPodCIDR(podCIDR)
 			}
-			glog.Infof("Setting cidr: %v -> %v",
-				kl.runtimeState.podCIDR(), podCIDR)
-			kl.runtimeState.setPodCIDR(podCIDR)
+			if err := ensureIPTablesMasqRule(); err != nil {
+				return fmt.Errorf("Error on adding ip table rules: %v", err)
+			}
+			podCIDR := kl.runtimeState.podCIDR()
+			if len(podCIDR) == 0 {
+				return fmt.Errorf("ConfigureCBR0 requested, but PodCIDR not set. Will not configure CBR0 right now")
+			} else if err := kl.reconcileCBR0(podCIDR); err != nil {
+				return fmt.Errorf("Error configuring cbr0: %v", err)
+			}
 		}
-		if err := ensureIPTablesMasqRule(); err != nil {
-			err = fmt.Errorf("Error on adding ip table rules: %v", err)
-			glog.Error(err)
-		}
-		podCIDR := kl.runtimeState.podCIDR()
-		if len(podCIDR) == 0 {
-			err = fmt.Errorf("ConfigureCBR0 requested, but PodCIDR not set. Will not configure CBR0 right now")
-			glog.Warning(err)
-		} else if err := kl.reconcileCBR0(podCIDR); err != nil {
-			err = fmt.Errorf("Error configuring cbr0: %v", err)
-			glog.Error(err)
-		}
+		return nil
+	}()
+	if err != nil {
+		glog.Error(err)
 	}
 	kl.runtimeState.setNetworkState(err)
 }

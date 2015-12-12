@@ -50,8 +50,8 @@ readonly KUBE_SERVER_BINARIES=("${KUBE_SERVER_TARGETS[@]##*/}")
 # The server platform we are building on.
 readonly KUBE_SERVER_PLATFORMS=(
   linux/amd64
-  linux/arm
 )
+  # linux/arm
 
 # The set of client targets that we are building for all platforms
 readonly KUBE_CLIENT_TARGETS=(
@@ -101,12 +101,12 @@ readonly KUBE_TEST_PORTABLE=(
 # in 'build/build-image/Dockerfile'
 readonly KUBE_CLIENT_PLATFORMS=(
   linux/amd64
-  linux/386
-  linux/arm
-  darwin/amd64
-  darwin/386
-  windows/amd64
 )
+  #linux/386
+  #linux/arm
+  #darwin/amd64
+  #darwin/386
+  #windows/amd64
 
 # Gigabytes desired for parallel platform builds. 11 is fairly
 # arbitrary, but is a reasonable splitting point for 2015

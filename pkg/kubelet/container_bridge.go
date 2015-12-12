@@ -30,6 +30,7 @@ import (
 var cidrRegexp = regexp.MustCompile(`inet ([0-9a-fA-F.:]*/[0-9]*)`)
 
 func createCBR0(wantCIDR *net.IPNet) error {
+	glog.Infof("CreateCBRO: %v", wantCIDR)
 	// recreate cbr0 with wantCIDR
 	if err := exec.Command("brctl", "addbr", "cbr0").Run(); err != nil {
 		glog.Error(err)

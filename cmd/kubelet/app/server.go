@@ -1046,6 +1046,7 @@ func CreateAndInitKubelet(kc *KubeletConfig) (k KubeletBootstrap, pc *config.Pod
 	)
 
 	if err != nil {
+		glog.Errorf("Error on CreateAndInitKubelet: %v", err)
 		return nil, nil, err
 	}
 

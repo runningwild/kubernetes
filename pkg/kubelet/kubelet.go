@@ -360,6 +360,7 @@ func NewMainKubelet(
 	klet.livenessManager = proberesults.NewManager()
 
 	// Initialize the runtime.
+	glog.Infof("Setting container runtime: %v", containerRuntime)
 	switch containerRuntime {
 	case "docker":
 		// Only supported one for now, continue.
@@ -413,6 +414,7 @@ func NewMainKubelet(
 	default:
 		return nil, fmt.Errorf("unsupported container runtime %q specified", containerRuntime)
 	}
+	glog.Infof("Set container runtime: %v", containerRuntime)
 
 	klet.runtimeState = newRuntimeState(maxWaitForContainerRuntime, configureCBR0, podCIDR, klet.isContainerRuntimeVersionCompatible)
 

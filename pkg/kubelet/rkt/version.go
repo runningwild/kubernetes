@@ -59,69 +59,106 @@ func (r rktVersion) Compare(other string) (int, error) {
 func (r *Runtime) checkVersion(minimumRktBinVersion, recommendedRktBinVersion, minimumAppcVersion, minimumRktApiVersion, minimumSystemdVersion string) error {
 	// Check systemd version.
 	var err error
+	glog.Infof("here")
 	r.systemdVersion, err = r.systemd.Version()
+	glog.Infof("here")
 	if err != nil {
+		glog.Infof("here")
 		return err
 	}
+	glog.Infof("here")
 	result, err := r.systemdVersion.Compare(minimumSystemdVersion)
+	glog.Infof("here")
 	if err != nil {
+		glog.Infof("here")
 		return err
 	}
 	if result < 0 {
+		glog.Infof("here")
 		return fmt.Errorf("rkt: systemd version(%v) is too old, requires at least %v", r.systemdVersion, minimumSystemdVersion)
 	}
 
 	// Example for the version strings returned by GetInfo():
 	// RktVersion:"0.10.0+gitb7349b1" AppcVersion:"0.7.1" ApiVersion:"1.0.0-alpha"
+	glog.Infof("here")
 	resp, err := r.apisvc.GetInfo(context.Background(), &rktapi.GetInfoRequest{})
+	glog.Infof("here")
 	if err != nil {
+		glog.Infof("here")
 		return err
 	}
 
 	// Check rkt binary version.
+	glog.Infof("here")
 	r.binVersion, err = newRktVersion(resp.Info.RktVersion)
+	glog.Infof("here")
 	if err != nil {
+		glog.Infof("here")
 		return err
 	}
+	glog.Infof("here")
 	result, err = r.binVersion.Compare(minimumRktBinVersion)
+	glog.Infof("here")
 	if err != nil {
+		glog.Infof("here")
 		return err
 	}
+	glog.Infof("here")
 	if result < 0 {
+		glog.Infof("here")
 		return fmt.Errorf("rkt: binary version is too old(%v), requires at least %v", resp.Info.RktVersion, minimumRktBinVersion)
 	}
+	glog.Infof("here")
 	result, err = r.binVersion.Compare(recommendedRktBinVersion)
+	glog.Infof("here")
 	if err != nil {
+		glog.Infof("here")
 		return err
 	}
 	if result != 0 {
 		// TODO(yifan): Record an event to expose the information.
+		glog.Infof("here")
 		glog.Warningf("rkt: current binary version %q is not recommended (recommended version %q)", resp.Info.RktVersion, recommendedRktBinVersion)
 	}
 
 	// Check Appc version.
+	glog.Infof("here")
 	r.appcVersion, err = newRktVersion(resp.Info.AppcVersion)
+	glog.Infof("here")
 	if err != nil {
+		glog.Infof("here")
 		return err
 	}
+	glog.Infof("here")
 	result, err = r.appcVersion.Compare(minimumAppcVersion)
+	glog.Infof("here")
 	if err != nil {
+		glog.Infof("here")
 		return err
 	}
+	glog.Infof("here")
 	if result < 0 {
+		glog.Infof("here")
 		return fmt.Errorf("rkt: appc version is too old(%v), requires at least %v", resp.Info.AppcVersion, minimumAppcVersion)
 	}
 
 	// Check rkt API version.
+	glog.Infof("here")
 	r.apiVersion, err = newRktVersion(resp.Info.ApiVersion)
+	glog.Infof("here")
 	if err != nil {
+		glog.Infof("here")
 		return err
 	}
+	glog.Infof("here")
 	result, err = r.apiVersion.Compare(minimumRktApiVersion)
+	glog.Infof("here")
 	if err != nil {
+		glog.Infof("here")
 		return err
 	}
 	if result < 0 {
+		glog.Infof("here")
 		return fmt.Errorf("rkt: API version is too old(%v), requires at least %v", resp.Info.ApiVersion, minimumRktApiVersion)
 	}
 	return nil

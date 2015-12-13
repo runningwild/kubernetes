@@ -138,6 +138,7 @@ func New(config *Config,
 	imageBackOff *util.Backoff,
 	serializeImagePulls bool,
 ) (*Runtime, error) {
+	glog.Infof("rkt.New()")
 	// Create dbus connection.
 	systemd, err := newSystemd()
 	if err != nil {

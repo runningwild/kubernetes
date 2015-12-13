@@ -404,6 +404,7 @@ func NewMainKubelet(
 			serializeImagePulls,
 		)
 		if err != nil {
+			glog.Errorf("Error on rkt.New(): %v", err)
 			return nil, err
 		}
 		klet.containerRuntime = rktRuntime
@@ -897,6 +898,7 @@ func (kl *Kubelet) initializeRuntimeDependentModules() {
 
 // Run starts the kubelet reacting to config updates
 func (kl *Kubelet) Run(updates <-chan kubetypes.PodUpdate) {
+	glog.Infof("Kubelet.Run() started.")
 	if kl.logServer == nil {
 		kl.logServer = http.StripPrefix("/logs/", http.FileServer(http.Dir("/var/log/")))
 	}
@@ -913,6 +915,7 @@ func (kl *Kubelet) Run(updates <-chan kubetypes.PodUpdate) {
 		// Start syncing node status immediately, this may set up things the runtime needs to run.
 		go util.Until(kl.syncNodeStatus, kl.nodeStatusUpdateFrequency, util.NeverStop)
 	}
+	glog.Infof("Kubelet.Run() go -> syncNetworkStatus.")
 	go util.Until(kl.syncNetworkStatus, 30*time.Second, util.NeverStop)
 	go util.Until(kl.updateRuntimeUp, 5*time.Second, util.NeverStop)
 

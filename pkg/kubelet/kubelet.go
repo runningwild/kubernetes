@@ -403,6 +403,7 @@ func NewMainKubelet(
 			imageBackOff,
 			serializeImagePulls,
 		)
+		glog.Infof("Result of rkt.New(): %v %v", rktRuntime, err)
 		if err != nil {
 			glog.Errorf("Error on rkt.New(): %v", err)
 			return nil, err

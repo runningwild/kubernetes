@@ -140,23 +140,32 @@ func New(config *Config,
 ) (*Runtime, error) {
 	glog.Infof("rkt.New()")
 	// Create dbus connection.
+	glog.Infof("newSystemd()")
 	systemd, err := newSystemd()
 	if err != nil {
+		glog.Infof("ERror here")
 		return nil, fmt.Errorf("rkt: cannot create systemd interface: %v", err)
 	}
 
 	// TODO(yifan): Use secure connection.
+	glog.Infof("here")
 	apisvcConn, err := grpc.Dial(defaultRktAPIServiceAddr, grpc.WithInsecure())
+	glog.Infof("here")
 	if err != nil {
+		glog.Infof("ERror here")
 		return nil, fmt.Errorf("rkt: cannot connect to rkt api service: %v", err)
 	}
 
 	rktBinAbsPath := config.Path
+	glog.Infof("here")
 	if rktBinAbsPath == "" {
 		// No default rkt path was set, so try to find one in $PATH.
 		var err error
+		glog.Infof("here")
 		rktBinAbsPath, err = exec.LookPath("rkt")
+		glog.Infof("here")
 		if err != nil {
+			glog.Infof("here: %v", err)
 			return nil, fmt.Errorf("cannot find rkt binary: %v", err)
 		}
 	}
@@ -179,14 +188,17 @@ func New(config *Config,
 	} else {
 		rkt.imagePuller = kubecontainer.NewImagePuller(recorder, rkt, imageBackOff)
 	}
+	glog.Infof("here")
 
 	if err := rkt.checkVersion(minimumRktBinVersion, recommendedRktBinVersion, minimumAppcVersion, minimumRktApiVersion, minimumSystemdVersion); err != nil {
+		glog.Infof("here: %v", err)
 		// TODO(yifan): Latest go-systemd version have the ability to close the
 		// dbus connection. However the 'docker/libcontainer' package is using
 		// the older go-systemd version, so we can't update the go-systemd version.
 		rkt.apisvcConn.Close()
 		return nil, err
 	}
+	glog.Infof("here")
 	return rkt, nil
 }
 

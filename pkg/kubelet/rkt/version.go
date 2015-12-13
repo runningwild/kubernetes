@@ -80,7 +80,7 @@ func (r *Runtime) checkVersion(minimumRktBinVersion, recommendedRktBinVersion, m
 
 	// Example for the version strings returned by GetInfo():
 	// RktVersion:"0.10.0+gitb7349b1" AppcVersion:"0.7.1" ApiVersion:"1.0.0-alpha"
-	glog.Infof("here")
+	glog.Infof("here") // GOT TO HERE
 	resp, err := r.apisvc.GetInfo(context.Background(), &rktapi.GetInfoRequest{})
 	glog.Infof("here")
 	if err != nil {

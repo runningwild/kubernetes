@@ -169,6 +169,10 @@ func New(config *Config,
 			return nil, fmt.Errorf("cannot find rkt binary: %v", err)
 		}
 	}
+	for i := 0; i < 10; i++ {
+		glog.Infof("apiscvConn state: %v", apisvcConn.State())
+		time.Sleep(time.Second)
+	}
 
 	rkt := &Runtime{
 		systemd:             systemd,

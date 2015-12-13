@@ -180,7 +180,7 @@ coreos:
         --cloud-provider=gce \
         --config=/etc/kubernetes/manifests \
         --allow-privileged=true \
-        --v=2 \
+        --v=4 \
         --cluster-dns=${DNS_SERVER_IP} \
         --cluster-domain=${DNS_DOMAIN} \
         --logtostderr=true \
@@ -206,7 +206,7 @@ coreos:
         ExecStart=/opt/kubernetes/server/bin/kube-proxy \
         --master=https://${KUBERNETES_MASTER_NAME}.c.${PROJECT_ID}.internal \
         --kubeconfig=/var/lib/kube-proxy/kubeconfig \
-        --v=2 \
+        --v=4 \
         --logtostderr=true
         Restart=always
         RestartSec=10

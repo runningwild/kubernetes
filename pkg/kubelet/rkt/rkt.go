@@ -789,6 +789,9 @@ func (r *Runtime) generateEvents(runtimePod *kubecontainer.Pod, reason string, f
 // RunPod first creates the unit file for a pod, and then
 // starts the unit over d-bus.
 func (r *Runtime) RunPod(pod *api.Pod, pullSecrets []api.Secret) error {
+	glog.V(4).Infof("Pod.Name: %v", api.Pod.Name)
+	glog.V(4).Infof("Pod.ResourceVersion: %v", api.Pod.ResourceVersion)
+	glog.V(4).Infof("Pod.Labels: %v", api.Pod.Labels)
 	glog.V(4).Infof("Rkt starts to run pod: name %q.", format.Pod(pod))
 
 	name, runtimePod, prepareErr := r.preparePod(pod, pullSecrets)

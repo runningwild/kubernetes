@@ -1530,7 +1530,7 @@ func (r *Runtime) ListImages() ([]kubecontainer.Image, error) {
 	for i, image := range listResp.Images {
 		images[i] = kubecontainer.Image{
 			ID:   image.Id,
-			Tags: []string{image.Name},
+			Tags: []string{image.Name + ":" + image.Version},
 			//TODO: fill in the size of the image
 		}
 	}

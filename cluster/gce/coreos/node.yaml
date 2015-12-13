@@ -118,6 +118,18 @@ coreos:
         ExecStartPre=/usr/bin/tar xzvf /opt/rkt/rkt-v${RKT_VERSION}.tar.gz -C /opt --overwrite
         ExecStart=/usr/bin/mv /opt/rkt-v${RKT_VERSION} /opt/rkt/rkt
 
+    - name: rkt-api.service
+      command: start
+      content: |
+        [Unit]
+        Description=rkt api service
+        Documentation=http://github.com/coreos/rkt
+        Requires=kubernetes-install-rkt.service
+        After=kubernetes-install-rkt.service
+        [Service]
+        EnvironmentFile=/etc/kube-env
+        ExecStart=/opt/rkt/rkt/rkt api-service
+
     - name: kubernetes-install-minion.service
       command: start
       content: |

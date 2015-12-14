@@ -836,6 +836,8 @@ func (r *Runtime) RunPod(pod *api.Pod, pullSecrets []api.Secret) error {
 // convertRktPod will convert a rktapi.Pod to a kubecontainer.Pod
 func (r *Runtime) convertRktPod(rktpod rktapi.Pod) (*kubecontainer.Pod, error) {
 	manifest := &appcschema.PodManifest{}
+	// jwills - FAIL HERE
+	glog.Infof("rktpod.Manifest: %s", rktpod.Manifest)
 	err := json.Unmarshal(rktpod.Manifest, manifest)
 	if err != nil {
 		return nil, err

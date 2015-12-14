@@ -839,6 +839,7 @@ func (r *Runtime) convertRktPod(rktpod rktapi.Pod) (*kubecontainer.Pod, error) {
 	// jwills - FAIL HERE
 	glog.Infof("rktpod.Manifest: %s", rktpod.Manifest)
 	err := json.Unmarshal(rktpod.Manifest, manifest)
+	glog.Infof("error: %v", err)
 	if err != nil {
 		return nil, err
 	}
@@ -882,7 +883,9 @@ func (r *Runtime) convertRktPod(rktpod rktapi.Pod) (*kubecontainer.Pod, error) {
 	}
 	for _, app := range rktpod.Apps {
 		manifest := &appcschema.ImageManifest{}
+		glog.Infof("ImageManifest: %s", app.Image.Manifest)
 		err := json.Unmarshal(app.Image.Manifest, manifest)
+		glog.Infof("error: %v", err)
 		if err != nil {
 			return nil, err
 		}

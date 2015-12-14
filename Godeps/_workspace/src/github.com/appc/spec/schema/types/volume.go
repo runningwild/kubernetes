@@ -83,7 +83,11 @@ func (v Volume) MarshalJSON() ([]byte, error) {
 }
 
 func (v Volume) String() string {
-	s := fmt.Sprintf("%s,kind=%s,readOnly=%t", v.Name, v.Kind, *v.ReadOnly)
+	ro := false
+	if v.ReadOnly != nil {
+		ro = *v.ReadOnly
+	}
+	s := fmt.Sprintf("%s,kind=%s,readOnly=%t", v.Name, v.Kind, ro)
 	if v.Source != "" {
 		s = s + fmt.Sprintf("source=%s", v.Source)
 	}

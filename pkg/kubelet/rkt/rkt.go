@@ -530,6 +530,11 @@ func setApp(imgManifest *appcschema.ImageManifest, c *api.Container,
 		if err != nil {
 			return fmt.Errorf("cannot unmarshal ENTRYPOINT %q: %v", cmd, err)
 		}
+	} else {
+               // This is an appc container
+               for _, part := range imgManifest.App.Exec {
+                       command = append(command, part)
+               }
 	}
 	ag, ok := imgManifest.Annotations.Get(appcDockerCmd)
 	if ok {
@@ -538,6 +543,7 @@ func setApp(imgManifest *appcschema.ImageManifest, c *api.Container,
 			return fmt.Errorf("cannot unmarshal CMD %q: %v", ag, err)
 		}
 	}
+
 	userCommand, userArgs := kubecontainer.ExpandContainerCommandAndArgs(c, envs)
 
 	if len(userCommand) > 0 {
